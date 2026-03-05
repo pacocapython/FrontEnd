@@ -1,13 +1,28 @@
-q = int(input('digite a quantidade de minutos que você consumiu '))
+n = str(input("Digite seu nome: "))
+i = int(input("Digite sua idade: "))
+m = int(input("Digite o mês que você nasceu(1 a 12): "))
 
-a = q - 100
-b = a * 2.00
-c = 50 + b
-
-if q >= 100:
-    print("O valor que você terá que pagar é", c)
-if q > 100:
-    print(f'você utilizou todos os minutos pagos, serão cobrados R${b} a mais')
-elif q < 100:
-    print(f'não há valor a ser pago')
-#GABRIEL GUSTAVO SOUZA DE VARGAS
+if m == 1:
+   print("Seu signo é capricórnio")
+elif m == 2:
+   print("Seu signo é aquário")
+elif m == 3:
+   print("Seu signo é peixes")
+elif m == 4:
+   print("Seu signo é áries")
+elif m == 5:
+   print("Seu signo é touro")
+elif m == 6:
+   print("Seu signo é gemêos")
+elif m == 7:
+   print("Seu signo é cancêr")
+elif m == 8:
+   print("Seu signo é leão")
+elif m == 9:
+   print("Seu signo é virgem")
+elif m == 10:
+   print("Seu signo é libra")
+elif m == 11:
+   print("Seu signo é escorpião")
+elif m == 12:
+   print("Seu signo é sagitário")
