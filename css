@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campo Minado CSS - Responsivo</title>
+    <style>
+        :root {
+            --grid-gap: 8px;
+            --background-color: #06408b;
+            --cell-color-initial: #00adfdf8;   
+            --cell-color-named-html: #08ceff; /* Laranja HTML */
+            --cell-color-revealed: #93fbff; 
+            --text-color-light: #ffffff;
+            --text-color-dark: #000000;
+            --border-color: #dee2e6;    
+            --border-radius: 8px;
+        }
+
+        body {  
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        h1 {
+            color: #f8f9fa;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .grid-container {
+            display: grid;
+            width: 100%;
+            max-width: 1400px;
+            grid-template-columns: repeat(10, 1fr);
+            gap: var(--grid-gap);
+        }
+
+        .cell {
+            aspect-ratio: 1 / 1; 
+            width: 100%;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            padding: 5px;
+            box-sizing: border-box;
+            transition: transform 0.3s ease, background-color 0.3s, color 0.3s;
+            user-select: none;
+            background-color: var(--cell-color-initial);
+            color: var(--text-color-light);
+            font-size: clamp(14px, 3vw, 24px);
+        }
+
+        .cell:not(.revealed):hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .cell.named.type-html {
+            background-color: var(--cell-color-named-html);
+        }
+        
+        .cell.named {
+            color: var(--text-color-light);
+            font-size: clamp(10px, 1.8vw, 16px);
+            word-break: break-all;
+        }
+        
+        .cell.revealed {
+            background-color: var(--cell-color-revealed);
+            color: var(--text-color-dark);
+            border: 1px solid var(--border-color);
+            font-weight: normal;
+            cursor: default;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            font-size: clamp(9px, 1.2vw, 14px);
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Campo Minado: Elementos CSS</h1>
+<div class="grid-container" id="minefield"></div>
+
+<script>
+    const minefield = document.getElementById('minefield');
+    
+    // Lista expandida para 100 itens, apenas com HTML
+    const items = [
+   { type: 'html', name: 'display', answer: 'Define o comportamento do elemento (block, inline, flex, grid, none).' },
+        { type: 'html', name: 'width/height', answer: 'Define a largura e altura.' },
+        { type: 'html', name: 'max-width/max-height', answer: 'Define largura/altura máxima (essencial para responsividade).' },
+        { type: 'html', name: 'padding', answer: 'e subtipos -top, -left, etc.): Espaçamento interno.' },
+        { type: 'html', name: 'margin', answer: '(e subtipos -top, -left, etc.): Espaçamento externo.' },
+        { type: 'html', name: 'box-sizing', answer: 'Controla como largura/altura são calculadas (border-box é o recomendado).' },
+        { type: 'html', name: 'overflow', answer: ' (e -x, -y): Define o que acontece com conteúdo que transborda (auto, hidden, scroll).' },
+        { type: 'html', name: 'color', answer: 'Cor do texto.' },
+        { type: 'html', name: 'font-family', answer: 'Define a fonte (fonte principal).' },
+        { type: 'html', name: 'font-size', answer: 'Tamanho da fonte.' },
+        { type: 'html', name: 'font-weight', answer: 'Espessura da fonte (bold, normal, 400, 700).' },
+        { type: 'html', name: 'text-align', answer: ' Alinhamento horizontal (center, left, right, justify).' },
+        { type: 'html', name: 'line-height', answer: ' Espaçamento entre linhas (altura da linha).' },
+        { type: 'html', name: 'text-decoration', answer: 'Decoração do texto (underline, none).' },
+        { type: 'html', name: 'text-transform', answer: 'Capitalização (uppercase, lowercase, capitalize).' },
+        { type: 'html', name: 'letter-spacing', answer: 'Espaçamento entre letras.' },
+        { type: 'html', name: 'font-style', answer: 'Estilo (italic, normal).' },
+        { type: 'html', name: 'white-space', answer: 'Controla quebras de linha e espaços.' },
+        { type: 'html', name: 'background-color', answer: 'Cor de fundo.' },
+        { type: 'html', name: 'background-image', answer: 'Imagem de fundo.' },
+        { type: 'html', name: 'background-size', answer: 'Ajusta o tamanho da imagem de fundo (cover, contain).' },
+        { type: 'html', name: 'background-position', answer: 'Posição da imagem de fundo.' },
+        { type: 'html', name: 'border', answer: 'Campo de entrada.' },
+        { type: 'html', name: 'border-radius', answer: 'Botão clicável.' },
+        { type: 'html', name: 'box-shadow', answer: 'Rótulo de campo.' },
+        { type: 'html', name: 'text-shadow', answer: 'Texto multilinhas.' },
+        { type: 'html', name: 'opacity', answer: 'Lista de seleção.' },
+        { type: 'html', name: 'accent-color', answer: 'Item do select.' },
+        { type: 'html', name: 'flex', answer: 'Cria uma tabela.' },
+        { type: 'html', name: 'justify-content', answer: 'Linha da tabela.' },
+        { type: 'html', name: 'align-items', answer: 'Célula da tabela.' },
+        { type: 'html', name: 'flex-direction', answer: 'Título da coluna.' },
+        { type: 'html', name: 'flex-wrap', answer: 'Topo da tabela.' },
+        { type: 'html', name: 'gap', answer: 'Corpo da tabela.' },
+        { type: 'html', name: 'grid-template-columns', answer: 'Base da tabela.' },
+        { type: 'html', name: 'grid-template-rows', answer: 'Quebra de linha.' },
+        { type: 'html', name: 'grid-area', answer: 'Linha horizontal.' },
+        { type: 'html', name: 'position', answer: 'Destaque importante.' },
+        { type: 'html', name: 'top / right / bottom / left', answer: 'Ênfase em itálico.' },
+        { type: 'html', name: 'z-index', answer: 'Citação longa.' },
+        { type: 'html', name: 'visibility', answer: 'Trecho de código.' },
+        { type: 'html', name: 'cursor', answer: 'Texto formatado.' },
+        { type: 'html', name: 'transition', answer: 'Frame externo.' },
+        { type: 'html', name: 'transform', answer: 'Raiz do documento.' },
+        { type: 'html', name: 'animation', answer: 'Cabeça do documento.' },
+        { type: 'html', name: '@keyframes', answer: 'Título da aba.' },
+        { type: 'html', name: '@media', answer: 'Metadados técnicos.' },
+        { type: 'html', name: '@container', answer: 'Link de arquivo CSS.' },
+        { type: 'html', name: 'var()', answer: 'Estilos internos.' },
+        { type: 'html', name: 'object-fit', answer: 'Código JavaScript.' },
+        ];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    shuffle(items);
+
+    items.forEach((item, index) => {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.textContent = index + 1;
+        cell.dataset.name = item.name;
+        cell.dataset.answer = item.answer;
+        cell.dataset.type = item.type;
+
+        cell.addEventListener('click', function() {
+            if (this.classList.contains('revealed')) return;
+            
+            if (this.classList.contains('named')) {
+                this.classList.remove('named', 'type-html');
+                this.classList.add('revealed');
+                this.textContent = this.dataset.answer;
+                return;
+            }
+            
+            this.classList.add('named', 'type-html');
+            this.textContent = this.dataset.name;
+        });
+
+        minefield.appendChild(cell);
+    });
+</script>
+
+</body>
+</html>
